@@ -1,6 +1,8 @@
 import React from 'react';
 import './FormP.css';
 import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 const baseUrl = "http://localhost:8080"
@@ -30,12 +32,13 @@ function PostProd(namec, prod, cant, tiendac, textc) {
     console.log(tiendac)
     console.log(textc)
 
-    axios.post(baseUrl + '/user', {
-        username: prod,
+    axios.post(baseUrl + '/Pedido', {
         nombre: namec,
-        tienda: tiendac,
+        idTienda: tiendac,
+        ordenes:[{producto:{nombre:prod},cantidad:cant}],
         asunto: cant,
-        texto: textc
+        texto: textc,
+        estado:"Recibido"
 
     })
         .then(function (response) {
@@ -54,12 +57,26 @@ class Form extends React.Component {
             prodname: '',
             cantidad: '',
             tienda: '',
-            text: ''
+            text: '',
+            products: [],
+            tiendas: [],
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleprodname=this.handleprodname.bind(this);
+        this.handletienda=this.handletienda.bind(this);
     }
+
+
+    handleprodname(e) {
+        
+        this.setState({ prodname: e.target.value });
+      }
+      handletienda(e) {
+        
+        this.setState({ tienda: e.target.value });
+      }
 
 
     handleChange(event) {
@@ -72,7 +89,7 @@ class Form extends React.Component {
         localStorage.setItem('nameStorage', this.state.name)
         localStorage.setItem('prodStorage', this.state.prodname)
         localStorage.setItem('cantStorage', this.state.cantidad)
-        localStorage.setItem('tiendaStorage', this.state.email)
+        localStorage.setItem('tiendaStorage', this.state.tienda)
         localStorage.setItem('textStorage', this.state.text)
 
 
@@ -91,15 +108,70 @@ class Form extends React.Component {
         event.preventDefault();
         window.location.reload();
     }
+    componentDidMount() {
+        axios.get(baseUrl + '/producto')
+            .then(res => {
+                const getproducts = res.data;
+                this.setState({ products: getproducts });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        axios.get(baseUrl + '/Tienda')
+            .then(res => {
+                const getTiendas = res.data;
+                this.setState({ tiendas: getTiendas });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
     render() {
+        const listProductos = this.state.products.map(producto =>
+            <MenuItem key={producto.nombre} value={producto.nombre}>
+                {producto.nombre}
+            </MenuItem>
+        );
+        const listTiendas = this.state.tiendas.map(tienda =>
+            <MenuItem key={tienda.nombre} value={tienda.nombre}>
+                {tienda.nombre}
+            </MenuItem>
+        );
         return (
             <div className="App">
                 <div className="container">
                     <div className="columns">
                         <div className="column is-9">
                             <form className="form" onSubmit={this.handleSubmit}>
+                                
 
+                                <TextField
+                                    id="priority-todo"
+                                    select
+                                    label="Seleccione"
+                                    value={this.state.prodname}
+                                    onChange={this.handleprodname}
+                                    helperText="Por favor seleccione el producto"
+                                    margin="normal"
+                                >
+                                    {listProductos}
+                                </TextField>
+
+                                <p></p>
+                               
+                                <TextField
+                                    id="priority-todo"
+                                    select
+                                    label="Seleccione"
+                                    value={this.state.tienda}
+                                    onChange={this.handletienda}
+                                    helperText="Por favor seleccione el tienda"
+                                    margin="normal"
+                                >
+                                    {listTiendas}
+                                </TextField>
+                                <p></p>
                                 <input
                                     className="formInput left"
                                     name="name"
@@ -107,33 +179,15 @@ class Form extends React.Component {
                                     type="text"
                                     value={this.state.name}
                                     onChange={this.handleChange} />
-
-                                <input
-                                    className="formInput right"
-                                    name="prodname"
-                                    placeholder="producto"
-                                    type="text"
-                                    value={this.state.prodname}
-                                    onChange={this.handleChange} />
-
-                                <input
+                                    <p></p>
+                                     <input
                                     className="formInput left"
                                     name="cantidad"
                                     placeholder="cantidad"
                                     type="text"
                                     value={this.state.cantidad}
                                     onChange={this.handleChange} />
-                                <input
-                                    className="formInput right"
-                                    name="tienda"
-                                    placeholder="Tienda"
-                                    type="text"
-                                    value={this.state.tienda}
-                                    onChange={this.handleChange}
-                                    required
-                                />
-
-                                <br />
+                                
 
 
                                 <textarea
@@ -146,8 +200,10 @@ class Form extends React.Component {
                                     onChange={this.handleChange}
                                     required
                                 />
+                                
 
                                 <br />
+                                
 
                                 {/* submit button */}
                                 <input

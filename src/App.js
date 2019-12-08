@@ -11,7 +11,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get(baseUrl + '/all-products')
+    axios.get(baseUrl + '/producto')
     .then(res => {
       const products = res.data;
       this.setState({ products });
@@ -22,7 +22,14 @@ class App extends Component {
   }
 
   render() {
-
+    const listProductos=this.state.products.map(producto => 
+      <li key={producto.id}>
+        <div>{producto.nombre}</div>
+        <div>{producto.descripcion}</div>
+        <div>{producto.precio}</div>
+        
+      </li>
+      );
     return (
       <div id="page" className="container">
         <nav className="navbar">
@@ -33,14 +40,10 @@ class App extends Component {
         <hr />
         <h5>Reliza tus Solicitudes</h5>
           <div className="questionArea">
-            get products
-           {/*  {this.state.products.map(product => (
-              <Question
-                product={product.product}
-              >
-                {product.answer}
-               </Question> 
-            ))} */}
+            <h5>Productos</h5>
+            <ul>
+              {listProductos}
+            </ul>
           </div>
         <p>Si tienes alguna duda llama a tu supervisor (Centro de distribucion)</p>
         <p id="phone"><img /* src={WhatsApp} */ />+57 5266288038</p>
