@@ -1,0 +1,50 @@
+form {
+    margin-top: 5%;
+}
+
+.formInput {
+    color: #888;
+    border: 0;
+    box-shadow: 1px 3px 2px #ddd;
+    height: 30px;
+    width: 45%;
+    padding: 0px 0 0 10px;
+    margin-bottom: 2%;
+}
+
+::placeholder {
+    color: #D1D4D5;
+}
+
+.formInput:focus {
+    color: black;
+}
+
+.right {
+    float: right;
+    margin-right: -10px;
+}
+
+#text {
+    width: 100%;
+    height: 200px;
+    padding: 10px 0 0 10px;
+}
+
+.button {
+    color: #fff;
+    background-color: #00316c;
+    padding: .7em 25px;
+    border-radius: 5px;
+    float: right;
+    margin-right: -10px;
+}
+
+.button:hover {
+    background-color: #0e55ac;
+    transition: 0.3s;
+}
+
+.button:disabled {
+    background-color: #00316c4d;
+}
