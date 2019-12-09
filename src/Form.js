@@ -7,8 +7,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 const baseUrl = "http://localhost:8080"
 
-
-
 var allowCrossDomain = function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // allow requests from any other server
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'); // allow these verbs
@@ -32,20 +30,31 @@ function PostProd(namec, prod, cant, tiendac, textc) {
     console.log(tiendac)
     console.log(textc)
 
-    axios.post(baseUrl + '/Pedido', {
+    var pedido = {
         nombre: namec,
-        idTienda: tiendac,
-        ordenes:[{producto:{nombre:prod},cantidad:cant}],
-        asunto: cant,
-        texto: textc,
+        Tienda: {
+            nombre: tiendac
+        },
+        ordenes:[
+            {
+                producto:{
+                nombre:prod
+            },
+            cantidad: cant
+        }],
+        //asunto: cant,
+        //texto: textc,
         estado:"Recibido"
-
-    })
+    }
+    console.log(pedido);
+    axios.post(baseUrl + '/pedidos', pedido)
         .then(function (response) {
             console.log(response);
+            alert("Ha podido enviar correctamente su pedido!");
         })
         .catch(function (error) {
             console.log(error);
+            alert("Ooops!. Hubo un error en el registro de su pedido.\nIntentelo de nuevo");
         });
 }
 
@@ -109,7 +118,7 @@ class Form extends React.Component {
         window.location.reload();
     }
     componentDidMount() {
-        axios.get(baseUrl + '/producto')
+        axios.get(baseUrl + '/productos')
             .then(res => {
                 const getproducts = res.data;
                 this.setState({ products: getproducts });
@@ -117,7 +126,7 @@ class Form extends React.Component {
             .catch(error => {
                 console.log(error);
             });
-        axios.get(baseUrl + '/Tienda')
+        axios.get(baseUrl + '/tiendas')
             .then(res => {
                 const getTiendas = res.data;
                 this.setState({ tiendas: getTiendas });
@@ -143,9 +152,8 @@ class Form extends React.Component {
                 <div className="container">
                     <div className="columns">
                         <div className="column is-9">
+                            
                             <form className="form" onSubmit={this.handleSubmit}>
-                                
-
                                 <TextField
                                     id="priority-todo"
                                     select
@@ -175,7 +183,7 @@ class Form extends React.Component {
                                 <input
                                     className="formInput left"
                                     name="name"
-                                    placeholder="Name"
+                                    placeholder="Nombre"
                                     type="text"
                                     value={this.state.name}
                                     onChange={this.handleChange} />
@@ -194,7 +202,7 @@ class Form extends React.Component {
                                     className="formInput"
                                     id="text"
                                     name="text"
-                                    placeholder="Text"
+                                    placeholder="Descripción"
                                     type="text"
                                     value={this.statetext}
                                     onChange={this.handleChange}
