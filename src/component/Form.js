@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
 
-const baseUrl = "http://localhost:8080"
+const baseUrl = "https://pedidos-justybueno-backend.herokuapp.com/"
 
 var allowCrossDomain = function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // allow requests from any other server
@@ -43,7 +43,7 @@ function PostProd(namec, prod, cant, tiendac, textc) {
             cantidad: cant
         }],
         //asunto: cant,
-        //texto: textc,
+        descripcion: textc,
         estado:"Recibido"
     }
     console.log(pedido);

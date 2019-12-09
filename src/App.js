@@ -1,59 +1,39 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import Form from './Form';
-
-const baseUrl = "http://localhost:8080"
+import {RealizarPedido} from './component/RealizarPedido.js';
+import Tabs from './component/Tabs.js';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 class App extends Component {
 
-  state = {
-    products: []
-  }
-
-  componentDidMount() {
-    axios.get(baseUrl + '/productos')
-    .then(res => {
-      const products = res.data;
-      this.setState({ products });
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  }
-
   render() {
-    const listProductos=this.state.products.map(producto => 
-      <li key={producto.id}>
-        <div>{producto.nombre}</div>
-        <div>{producto.descripcion}</div>
-        <div>{producto.precio}</div>
-        
-      </li>
-      );
-    return (
-      <div id="page" className="container">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <span className="navbar-item"><h4>Justo & Bueno. Realiza tus pedidos!</h4></span>
-          </div>
-        </nav>
-        <hr />
-          <div className="questionArea">
-            <h5>Productos</h5>
-            <ul>
-              {listProductos}
-            </ul>
-          </div>
-        <p>Si tienes alguna duda llama a tu supervisor (Centro de distribucion). +57 5266288038</p>
-        {/*<p id="phone"><img src={WhatsApp}  />+57 5266288038</p>*/}
+    const RealizarPedidoView = () => (
+      <React.Fragment>
+        <RealizarPedido/>
+      </React.Fragment>
+    );
 
-        <br/><h4><span>Formulario</span></h4> <hr />
-        <Form></Form> 
-      </div>
+    const PedidoSolicitadosView = () => (
+      <React.Fragment>
+        <RealizarPedido/>
+      </React.Fragment>
+    );
+
+    const TabsView = () => (
+      <React.Fragment>
+        <Tabs/>
+      </React.Fragment>
+    );
+
+    return (
+      <Router>
+        <Switch>
+          <Route exact path="/" component={TabsView} />
+          <Route exact path="/solicitar" component={RealizarPedidoView} />
+          <Route exact path="/pedidos" component={PedidoSolicitadosView} />
+        </Switch>
+    </Router>
     );
   }
-  scrollToMyRef = () => window.scrollTo(0, this.myRef.offsetTop)
 }
-
 
 export default App;
